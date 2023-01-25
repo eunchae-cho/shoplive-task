@@ -25,7 +25,7 @@ public class VideoService {
     public void save(MultipartFile file, String fileName) {
         try {
 
-            if (file.isEmpty()) { throw new NullPointerException(); }
+            if (file.isEmpty()) { return; }
 
             String uploadPath = UploadUtils.makePath(file, fileName);
             System.out.println("upload path :: " + uploadPath);
