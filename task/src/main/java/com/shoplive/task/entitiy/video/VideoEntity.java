@@ -1,6 +1,7 @@
 package com.shoplive.task.entitiy.video;
 
 import com.shoplive.task.common.entity.BasicEntity;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Getter
 @RedisHash("Video")
+@AllArgsConstructor
 @NoArgsConstructor
 public class VideoEntity extends BasicEntity {
     @NotBlank(message = "파일명은 필수입니다.")

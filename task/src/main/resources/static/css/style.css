@@ -1,3 +1,17 @@
 .video-con {
     margin-block: 40px;
 }
+
+.video-col {
+    text-align: center;
+}
+
+.btn-con {
+    margin-bottom: 15px;
+    text-align: right;
+}
+
+.valid-text {
+    margin-left: 10px;
+    color: #e00707;
+}
