@@ -8,8 +8,6 @@
     <link th:href="@{/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
     <script type="text/javascript" th:src="@{/js/jquery-3.6.3.js}"></script>
     <script type="text/javascript" th:src="@{/bootstrap/js/bootstrap.js}"></script>
-<!--    <script type="text/javascript" th:src="@{/js/constants/constants.js}"></script>-->
-    <script type="text/javascript" th:src="@{/js/utils.js}"></script>
 </head>
 <body>
 
@@ -69,28 +67,30 @@
         // 올리기 버튼 클릭 시
         $('#upload-btn').click(saveVideo);
 
-        let file = '';
+        let videoFile = '';
         function setFile(e) {
-            file = e.target.files[0];
+            videoFile = e.target.files[0];
             // checkFile(file);
-            $('#file-name').val(file.name.split('.')[0]);
+            $('#file-name').val(videoFile.name.split('.')[0]);
         }
 
         function saveVideo() {
+            const inputFile = $('#input-file').val();
+            const fileName = $('#file-name').val();
 
-            if (isEmpty($('#input-file').val())) {
+            if (inputFile === '' || inputFile === undefined) {
                 alert('업로드할 파일을 선택해주세요.');
                 return;
             }
 
-            if (isEmpty($('#file-name').val())) {
+            if (fileName === '' || fileName === undefined) {
                 alert('파일명을 입력해주세요.');
                 return;
             }
 
             let formData = new FormData();
-            formData.append('fileName', $('#file-name').val());
-            formData.append('file', file);
+            formData.append('fileName', fileName);
+            formData.append('file', videoFile);
 
             $.ajax({
                 method: 'POST',
@@ -100,8 +100,7 @@
                 contentType: false,
                 data: formData,
                 success: function (res) {
-                    console.log(res)
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         alert('업로드 성공했습니다.');
                         drawList(res.data);
                     } else {
@@ -120,7 +119,6 @@
         }
 
         function drawList(data) {
-            console.log(data.videoList);
             $('#video-row').html('');
             let list = data.videoList;
             let html = '';
@@ -135,26 +133,6 @@
             }
             $('#video-row').html(html);
         }
-
-        <!--  비디오 업로드 이벤트  -->
-        // function addVideo(e) {
-        //      if (e.target.files && e.target.files[0]) {
-        //
-        //        <!--  video 숨기기 해제  -->
-        //         $('#video').show();
-        //
-        //         checkFile(e.target.files[0]);
-        //
-        //         let reader = new FileReader();
-        //
-        //         reader.onload = function(ev) {
-        //             document.querySelector('#video-source').src = ev.target.result;
-        //             document.querySelector('#video').load();
-        //         }.bind(this)
-        //
-        //         reader.readAsDataURL(e.target.files[0]);
-        //      }
-        // }
     </script>
 </body>
 </html>
