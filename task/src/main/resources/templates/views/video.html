@@ -24,10 +24,10 @@
                     </button>
                 </div>
                 <div class="row">
-<!--                    <div class="col video-col">-->
-                    <div class="col">
-                        <video id="video" controls>
-                            <source id="video-source" src="/">
+                    <div class="col video-col" th:each="video : ${videoList}">
+                        <p th:text="${video.title}"></p>
+                        <video id="video" width="360" controls>
+                            <source th:src="${video.resized.videoUrl}">
                         </video>
                     </div>
                 </div>
@@ -45,14 +45,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-<!--                        <label for="input-file" class="form-label">업로드할 영상을 선택하세요.</label>-->
                         <input id="input-file" class="form-control" type="file">
-<!--                        <div class="input-group valid-text">error</div>-->
                     </div>
                     <div class="input-group mb-1">
                         <span class="input-group-text" id="inputGroup-sizing-default">파일명</span>
                         <input id="file-name" type="text" class="form-control">
-<!--                        <div class="input-group valid-text">error</div>-->
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -63,80 +60,81 @@
         </div>
     </div>
 
+    <script type="text/javascript">
+
+        // 파일 선택 시
+        $('#input-file').change(setFile);
+
+        // 올리기 버튼 클릭 시
+        $('#upload-btn').click(saveVideo);
+
+        let file = '';
+        function setFile(e) {
+            file = e.target.files[0];
+            // checkFile(file);
+            $('#file-name').val(file.name.split('.')[0]);
+        }
+
+        function saveVideo() {
+
+            if (isEmpty($('#input-file').val())) {
+                alert('업로드할 파일을 선택해주세요.');
+                return;
+            }
+
+            if (isEmpty($('#file-name').val())) {
+                alert('파일명을 입력해주세요.');
+                return;
+            }
+
+            let formData = new FormData();
+            formData.append('fileName', $('#file-name').val());
+            formData.append('file', file);
+
+            $.ajax({
+                method: 'POST',
+                url: '/video/save',
+                enctype: 'multipart/form-data',
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (res) {
+                    if (res.code == 200) {
+                        alert('업로드 성공했습니다.');
+                    }
+                },
+                error: function (error) {
+                    const response = error.responseJSON;
+                    alert(response.message);
+                }
+            });
+
+            // 초기화
+            $('#file-name').val('');
+            $('#input-file').val('');
+        }
+
+        <!--  비디오 업로드 이벤트  -->
+        // function addVideo(e) {
+        //      if (e.target.files && e.target.files[0]) {
+        //
+        //        <!--  video 숨기기 해제  -->
+        //         $('#video').show();
+        //
+        //         checkFile(e.target.files[0]);
+        //
+        //         let reader = new FileReader();
+        //
+        //         reader.onload = function(ev) {
+        //             document.querySelector('#video-source').src = ev.target.result;
+        //             document.querySelector('#video').load();
+        //         }.bind(this)
+        //
+        //         reader.readAsDataURL(e.target.files[0]);
+        //      }
+        // }
+
+    </script>
 </body>
 </html>
-<script type="text/javascript">
-    
-    // 파일 선택 시
-    $('#input-file').change(setFile);
 
-    // 올리기 버튼 클릭 시
-    $('#upload-btn').click(saveVideo);
-
-    let file = '';
-    function setFile(e) {
-        file = e.target.files[0];
-        $('#file-name').val(file.name.split('.')[0]);
-    }
-
-    function saveVideo() {
-        let formData = new FormData();
-        formData.append('fileName', $('#file-name').val());
-        formData.append('file', file);
-
-        $.ajax({
-            method: 'POST',
-            url: '/video/save',
-            enctype: 'multipart/form-data',
-            processData: false,
-            contentType: false,
-            data: formData,
-            success: function (res) {
-                console.log(res);
-            },
-            error: function (error) {
-                console.log(error)
-            }
-        });
-    }
-
-   <!--  비디오 업로드 이벤트  -->
-    function addVideo(e) {
-         if (e.target.files && e.target.files[0]) {
-
-           <!--  video 숨기기 해제  -->
-            $('#video').show();
-
-            checkFile(e.target.files[0]);
-
-            let reader = new FileReader();
-
-            reader.onload = function(ev) {
-                document.querySelector('#video-source').src = ev.target.result;
-                document.querySelector('#video').load();
-            }.bind(this)
-
-            reader.readAsDataURL(e.target.files[0]);
-         }
-    }
-
-    <!--  파일 유효성 체크  -->
-    function checkFile(file) {
-          const fileSize = 100 * 1024 * 1024;
-
-          <!--  파일 용량 크기 체크  -->
-          if (fileSize < parseInt(file.size)) {
-            alert('파일 용량이 100MB를 초과하였습니다.');
-            return;
-          }
-
-          <!--  파일 확장자 체크  -->
-          let fileExt = file.contentType.slice(file.name.lastIndexOf('/') + 1).toLowerCase();
-
-          if (fileExt !== MP4) {
-            alert('파일 확장자가 \'mp4\'만 가능합니다.');
-            return;
-          }
-
-    }
-</script>

@@ -14,3 +14,16 @@ spring:
     prefix: file:src/main/resources/templates/
     check-template-location: true
     cache: false
+
+upload:
+  path: /src/main/resources/static/upload/
+  convert:
+    path: /src/main/resources/static/upload/convert/
+
+ffmpeg:
+  exe:
+    location: /src/main/resources/ffmpeg/bin/ffmpeg
+
+ffprobe:
+  exe:
+    location: /src/main/resources/ffmpeg/bin/ffprobe
