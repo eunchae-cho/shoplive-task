@@ -19,6 +19,8 @@ upload:
   path: /src/main/resources/static/upload/
   convert:
     path: /src/main/resources/static/upload/convert/
+  thumbnail:
+    path: /src/main/resources/static/upload/thumbnail/
 
 ffmpeg:
   exe:

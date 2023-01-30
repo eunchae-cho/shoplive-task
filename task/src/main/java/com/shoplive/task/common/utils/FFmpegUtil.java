@@ -21,6 +21,8 @@ public class FFmpegUtil {
     private String uploadUrl;
     @Value("${upload.convert.path}")
     private String convertPath;
+    @Value("${upload.thumbnail.path}")
+    private String thumbnailPath;
 
     public FFmpegProbeResult getProbeResult(String filePath) {
         
@@ -37,34 +39,42 @@ public class FFmpegUtil {
         return ffmpegProbeResult;
     }
 
-    public boolean convertVideo(String filePath,
-                                String format,
-                                int width,
-                                int height) {
-        boolean result = false;
+    public void convertVideo(String fileName, String format, int width, int height) {
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(System.getProperty("user.dir").concat(uploadUrl + fileName))
+                .overrideOutputFiles(true)
+                .addOutput(System.getProperty("user.dir").concat(convertPath + fileName))
+                .setFormat(format)
+                .setVideoResolution(width, height)
+                .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
+                .done();
 
-        try {
-            FFmpegBuilder builder = new FFmpegBuilder().setInput(System.getProperty("user.dir").concat(uploadUrl + filePath))
-                    .overrideOutputFiles(true)
-                    .addOutput( System.getProperty("user.dir").concat(convertPath + filePath))
-                    .setFormat(format)
-                    .setVideoResolution(width, height)
-                    .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
-                    .done();
+        FFmpegExecutor executable = new FFmpegExecutor(fFmpeg, fFProbe);
+        FFmpegJob job = executable.createJob(builder);
+        System.out.println("CONVERTING START!");
+        job.run();
 
-            FFmpegExecutor executable = new FFmpegExecutor(fFmpeg, fFProbe);
-            FFmpegJob job = executable.createJob(builder);
-            System.out.println("CONVERTING START!");
-            job.run();
-
-            if (job.getState() == FFmpegJob.State.FINISHED) {
-                System.out.println("SUCCESS CONVERTING!");
-                result = true;
-            }
-        } catch (Exception e) {
-            System.out.println("[ERROR] FFmpegUtil.convertVideo() :: " + e.getMessage());
+        if (job.getState() == FFmpegJob.State.FINISHED) {
+            System.out.println("SUCCESS CONVERTING!");
         }
-
-        return result;
     }
+
+    public void createThumbnail(String fileName) {
+        String thumbnailName = fileName.substring(0, fileName.lastIndexOf(".")).concat(".png");
+
+        FFmpegBuilder builder = new FFmpegBuilder()
+                .setInput(System.getProperty("user.dir").concat(uploadUrl + fileName))
+                .overrideOutputFiles(true)
+                .addExtraArgs("-ss", "00:00:01")
+                .addOutput(System.getProperty("user.dir").concat(thumbnailPath + thumbnailName))
+                .setFrames(1)
+                .done();
+
+        FFmpegExecutor executor = new FFmpegExecutor(fFmpeg, fFProbe);
+        executor.createJob(builder).run();
+
+        System.out.println("SUCCESS MAKING THUMBNAIL!");
+
+    }
+
 }

@@ -11,7 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 @SpringBootTest
 public class FFmpegTest {
@@ -40,12 +42,25 @@ public class FFmpegTest {
 //
 //        FFmpegExecutor executor = new FFmpegExecutor(fFmpeg, fFprobe);
 //        executor.createJob(builder).run();
-    }
-
-    @Test
-    public void getProbeTest(){
-//        fFmpegUtil.getProbeResult("happyNewYear.mp4");
-
+//
+//
+//        String command = "/Users/eunchaecho/dev/shoplive-task/task/src/main/resources/ffmpeg/bin/ffprobe -i -progress "
+//                + outputUrl;
+//        Process process = Runtime.getRuntime().exec(command);
+//        System.out.println(command);
+//
+//        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//
+//        BufferedReader stdError = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+//
+//        String s = null;
+//        while ((s = stdInput.readLine()) != null) {
+//            System.out.println(s);
+//        }
+//
+//        while ((s = stdError.readLine()) != null) {
+//            System.out.println(s);
+//        }
     }
 
 }

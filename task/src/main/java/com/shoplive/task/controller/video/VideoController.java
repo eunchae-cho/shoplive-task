@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,10 +33,12 @@ public class VideoController {
      * */
     @PostMapping(value = "/save")
     public ApiResponse saveVideo(@Valid @RequestParam("file") MultipartFile file,
-                                    @Valid @RequestParam("fileName") String fileName) {
+                                 @Valid @RequestParam("fileName") String fileName,
+                                 Model model) {
         validator.isValid(file);
         videoService.save(file, fileName);
-        return ApiResponse.ok();
+        model.addAttribute("videoList", videoService.getAll());
+        return ApiResponse.ok(model);
     }
 
     /**

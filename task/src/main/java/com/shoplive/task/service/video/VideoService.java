@@ -1,6 +1,8 @@
 package com.shoplive.task.service.video;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.shoplive.task.common.enums.ErrorCode;
+import com.shoplive.task.common.exception.CustomException;
 import com.shoplive.task.common.utils.FFmpegUtil;
 import com.shoplive.task.common.utils.UploadUtil;
 import com.shoplive.task.entitiy.video.VideoEntity;
@@ -36,32 +38,35 @@ public class VideoService {
 
             if (file.isEmpty()) { return; }
 
-            // url 만들기
-            String uploadUrl = uploadUtil.makePath(file, fileName);
+            // 파일 이름 url 만들기
+            String pathName = uploadUtil.makePath(file, fileName);
 
             // 영상 업로드
-            uploadUtil.upload(file, uploadUrl);
+            uploadUtil.upload(file, pathName);
 
             // 영상 정보 가져오기
-            FFmpegProbeResult ffmpegProbeResult = fmpegUtil.getProbeResult(uploadUrl);
+            FFmpegProbeResult ffmpegProbeResult = fmpegUtil.getProbeResult(pathName);
 
-            // 영상 resize
+            // 썸네일 저장
+            fmpegUtil.createThumbnail(pathName);
+
+            // 영상 리사이즈
             int width = 360;
             int height = 240;
-            fmpegUtil.convertVideo(uploadUrl, "mp4", width, height);
+            fmpegUtil.convertVideo(pathName, "mp4", width, height);
 
             VideoInfo original = new VideoInfo(
                     file.getSize(),
                     String.valueOf(ffmpegProbeResult != null ? ffmpegProbeResult.getStreams().get(0).width : ""),
                     String.valueOf(ffmpegProbeResult != null ? ffmpegProbeResult.getStreams().get(0).height : ""),
-                    UPLOAD + uploadUrl
+                    UPLOAD + pathName
             );
 
             VideoInfo resized = new VideoInfo(
                     file.getSize(),
                     String.valueOf(width),
                     String.valueOf(height),
-                    CONVERT + uploadUrl
+                    CONVERT + pathName
             );
 
             VideoEntity videoEntity = new VideoEntity(
@@ -75,7 +80,7 @@ public class VideoService {
             videoRepository.save(videoEntity);
 
         } catch (Exception e) {
-            System.out.println("[ERROR] videoService save() ::" + e.getMessage());
+            throw new CustomException(ErrorCode.BAD_REQUEST, e.getMessage());
         }
     }
 

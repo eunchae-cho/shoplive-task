@@ -19,11 +19,11 @@ public class FFmpegConfig {
 
     @Bean(name = "ffmpeg")
     public FFmpeg fFmpeg() throws IOException {
-        return new FFmpeg( System.getProperty("user.dir").concat(ffmpegLocation));
+        return new FFmpeg(System.getProperty("user.dir").concat(ffmpegLocation));
     }
 
     @Bean(name = "ffprobe")
     public FFprobe fFprobe() throws IOException {
-        return new FFprobe( System.getProperty("user.dir").concat(ffprobeLocation));
+        return new FFprobe(System.getProperty("user.dir").concat(ffprobeLocation));
     }
 }
