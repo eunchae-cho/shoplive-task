@@ -17,13 +17,13 @@ public class FFmpegConfig {
     @Value("${ffprobe.exe.location}")
     private String ffprobeLocation;
 
-    @Bean(name = "ffmpeg")
+    @Bean(name = "fFmpeg")
     public FFmpeg fFmpeg() throws IOException {
-        return new FFmpeg(System.getProperty("user.dir").concat(ffmpegLocation));
+        return new FFmpeg(ffmpegLocation);
     }
 
-    @Bean(name = "ffprobe")
+    @Bean(name = "fFprobe")
     public FFprobe fFprobe() throws IOException {
-        return new FFprobe(System.getProperty("user.dir").concat(ffprobeLocation));
+        return new FFprobe(ffprobeLocation);
     }
 }

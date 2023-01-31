@@ -1,6 +1,5 @@
 package com.shoplive.task.service.video;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shoplive.task.common.enums.ErrorCode;
 import com.shoplive.task.common.exception.CustomException;
 import com.shoplive.task.common.utils.FFmpegUtil;
@@ -26,8 +25,8 @@ public class VideoService {
     private UploadUtil uploadUtil;
     @Autowired
     private FFmpegUtil fmpegUtil;
-    private final static String UPLOAD = "/upload/";
-    private final static String CONVERT = "/upload/convert/";
+    private final static String UPLOAD = "/static/upload/";
+    private final static String CONVERT = "/static/upload/convert/";
 
     public List<VideoEntity> getAll() {
         return (List<VideoEntity>) videoRepository.findAll();

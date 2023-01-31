@@ -1,0 +1,26 @@
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  redis:
+    host: redis
+    port: 6379
+  thymeleaf:
+    prefix: jar:file:/src/main/resources/templates/
+    check-template-location: true
+    cache: false
+
+upload:
+  path: jar:file:/app/app.jar!/BOOT-INF/classes!/resources/static/upload/
+  convert:
+    path: jar:file:/app/app.jar!/BOOT-INF/classes!/resources/static/upload/convert/
+  thumbnail:
+    path: jar:file:/app/app.jar!/BOOT-INF/classes!/resources/static/upload/thumbnail/
+
+ffmpeg:
+  exe:
+    location: /app/ffmpeg/bin/ffmpeg
+
+ffprobe:
+  exe:
+    location: /app/ffmpeg/bin/ffprobe

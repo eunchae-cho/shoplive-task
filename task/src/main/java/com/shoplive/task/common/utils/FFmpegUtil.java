@@ -15,8 +15,8 @@ import java.io.IOException;
 @Component
 @RequiredArgsConstructor
 public class FFmpegUtil {
-    private final FFmpeg fFmpeg;
-    private final FFprobe fFProbe;
+    private FFmpeg fFmpeg;
+    private FFprobe fFProbe;
     @Value("${upload.path}")
     private String uploadUrl;
     @Value("${upload.convert.path}")
@@ -30,7 +30,7 @@ public class FFmpegUtil {
 
         try {
 
-            ffmpegProbeResult = fFProbe.probe(System.getProperty("user.dir").concat(uploadUrl).concat(filePath));
+            ffmpegProbeResult = fFProbe.probe(uploadUrl.concat(filePath));
 
         } catch (IOException e) {
             System.out.println("[ERROR] FFmpegUtil.getProbeResult() :: " + e.getMessage());
@@ -41,9 +41,9 @@ public class FFmpegUtil {
 
     public void convertVideo(String fileName, String format, int width, int height) {
         FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(System.getProperty("user.dir").concat(uploadUrl + fileName))
+                .setInput(uploadUrl.concat(fileName))
                 .overrideOutputFiles(true)
-                .addOutput(System.getProperty("user.dir").concat(convertPath + fileName))
+                .addOutput(convertPath.concat(fileName))
                 .setFormat(format)
                 .setVideoResolution(width, height)
                 .setStrict(FFmpegBuilder.Strict.EXPERIMENTAL)
@@ -63,10 +63,10 @@ public class FFmpegUtil {
         String thumbnailName = fileName.substring(0, fileName.lastIndexOf(".")).concat(".png");
 
         FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(System.getProperty("user.dir").concat(uploadUrl + fileName))
+                .setInput(uploadUrl + fileName)
                 .overrideOutputFiles(true)
                 .addExtraArgs("-ss", "00:00:01")
-                .addOutput(System.getProperty("user.dir").concat(thumbnailPath + thumbnailName))
+                .addOutput(thumbnailPath + thumbnailName)
                 .setFrames(1)
                 .done();
 

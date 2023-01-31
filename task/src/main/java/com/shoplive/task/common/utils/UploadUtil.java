@@ -23,7 +23,7 @@ public class UploadUtil {
 
     public void upload(MultipartFile file, String path) {
         try {
-            String uploadPath = System.getProperty("user.dir").concat(uploadUrl).concat(path);
+            String uploadPath = uploadUrl.concat(path);
             System.out.println("upload path :: " + uploadPath);
 
             file.transferTo(new File(uploadPath));
