@@ -13,6 +13,7 @@
 
 ### 빌드 환경
 - application-local.yml : 로컬 환경 
+  - 로컬에서 환경에 맞게 경로 수정 필요!
 - application-dev.yml : docker 배포 환경
 ### 소스 빌드
 1. gradle 경로 이동
