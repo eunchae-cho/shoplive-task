@@ -14,6 +14,15 @@
 ### 빌드 환경
 - application-local.yml : 로컬 환경 
 - application-dev.yml : docker 배포 환경
+### 소스 빌드
+1. gradle 경로 이동
+```
+... shoplive-task/task
+```
+2. 소스 빌드
+```
+$ ./gradlew clean bootjar
+```
 ###  Docker 실행
 1. docker-compose.yml 경로로 이동
 ```
